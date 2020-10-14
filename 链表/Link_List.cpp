@@ -136,7 +136,7 @@ bool Link_List<T>::list_insert(int i,T e)
     int j=0;
     while (tmp!= nullptr&&j<i-1)
     {
-        tmp=tmp->next;
+        tmp=tmp->next;//先让tmp指向前置节点
         j++;
     }
     Node<T> *insert_node=new Node<T>();
@@ -157,10 +157,10 @@ bool Link_List<T>::list_delete(int i)
     int j=0;
     while (tmp!= nullptr&&j<i-1)
     {
-        tmp=tmp->next;
+        tmp=tmp->next;//tmp指向前置节点
         j++;
     }
-    tmp2=tmp->next;
+    tmp2=tmp->next;//tmp2指向要删除的节点
     if (tmp2== nullptr)
     {
         return false;
