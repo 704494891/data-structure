@@ -72,8 +72,8 @@ bool Link_Queue<T>::pop_queue(T &e)
     {
         e=p->data;
         delete p;
-        p=Q->end= nullptr;
-
+        p= nullptr;
+        Q->end= nullptr;
     } else{
         e=p->data;
         Q->begin=p->next;
