@@ -6,6 +6,7 @@
 #include "BTree.h"
 #include <iostream>
 #include "algorithm"
+#include <queue>
 
 using namespace std;
 const int maxsize = 1000;
@@ -35,9 +36,9 @@ template<class T>
 void BTree<T>::create_tree(char *str) {
     BTNode<T> *St[maxsize];//顺序栈
     BTNode<T> *p;
-    int top = -1;
-    int k = 0;
-    int j = 0;
+    int top = -1;//栈的指针
+    int k = 0;//左右树的标志位
+    int j = 0;//输入字符串的指针
     char ch;
 
     while (str[j] != '\0') {
@@ -101,12 +102,29 @@ void BTree<T>::print_tree() {
 }
 
 template<class T>
+void BTree<T>::print_leaf_node(BTNode<T> *root)
+{
+     if (root==nullptr)
+     {
+         return;
+     }
+     if (root->lchild==nullptr&&root->rchild==nullptr){
+         cout <<root->data;
+     }
+
+     print_leaf_node(root->lchild);
+     print_leaf_node(root->rchild);
+}
+
+template<class T>
 BTNode<T> *BTree<T>::find_Node_UN(BTNode<T> *t, T x) {
     BTNode<T> *p;
+    //终止条件
     if (t == nullptr) {
         return nullptr;
     } else if (t->data == x) {
         return t;
+        //每次递归做的事情
     } else {
         p = find_Node_UN(t->lchild, x);
         if (p != nullptr) {
@@ -142,4 +160,200 @@ int BTree<T>::tree_hight_UN(BTNode<T> *t) {
 template<class T>
 int BTree<T>::tree_hight() {
     return tree_hight_UN(this->root);
+}
+
+//先序遍历(递归)
+template<class T>
+void pre_order_UN(BTNode<T> *t){
+    if (t==nullptr)
+    {
+        return ;
+    }
+    cout<<t->data;
+    pre_order_UN(t->lchild);
+    pre_order_UN(t->rchild);
+}
+
+template<class T>
+void pre_order(BTree<T> &obj_tree){
+    pre_order_UN(obj_tree.root);
+}
+
+//中序遍历(递归)
+template<class T>
+void in_order_UN(BTNode<T> *t){
+    if (t==nullptr)
+    {
+        return ;
+    }
+
+    in_order_UN(t->lchild);
+    cout<<t->data;
+    in_order_UN(t->rchild);
+}
+
+template<class T>
+void in_order(BTree<T> &obj_tree){
+    in_order_UN(obj_tree.root);
+}
+
+//后序遍历(递归)
+template<class T>
+void post_order_UN(BTNode<T> *t){
+    if (t==nullptr)
+    {
+        return ;
+    }
+
+    post_order_UN(t->lchild);
+
+    post_order_UN(t->rchild);
+    cout<<t->data;
+}
+
+template<class T>
+void post_order(BTree<T> &obj_tree){
+    post_order_UN(obj_tree.root);
+}
+
+//先序遍历(非递归:用栈)
+template<class T>
+void pre_order_stack(BTree<T> &obj_tree){
+    pre_order_UN(obj_tree.root);
+}
+
+template<class T>
+void pre_order_stack_UN(BTNode<T> *t){
+    BTNode<T> *st[100];
+    int top=-1;
+
+    while(top!=-1||t==nullptr);
+    {
+        while(t!=nullptr)
+        {
+            cout<<t->data;
+            top++;
+            st[top]=t;
+            t=t->lchild;
+        }
+        if (top!=-1)
+        {
+            t=st[top];
+            top--;
+            t=t->rchild;
+        }
+    }
+}
+
+
+//中序遍历(非递归:用栈)
+template<class T>
+void in_order_stack(BTree<T> &obj_tree){
+    in_order_stack_UN(obj_tree.root);
+}
+
+template<class T>
+void in_order_stack_UN(BTNode<T> *t){
+    BTNode<T> *st[100];
+    int top=-1;
+    while(t!=nullptr||top!=-1)
+    {
+        while(t!=nullptr)//把所有左节点压近栈里
+        {
+            top++;
+            st[top]=t;
+            t=t->lchild;
+        }
+        if(top>-1)
+        {
+            t=st[top];
+            top--;
+            cout<<t->data;
+            t=t->rchild;
+
+        }
+    }
+}
+
+
+//后序遍历(非递归:用栈)//这个好难想明白...
+template<class T>
+void post_order_stack(BTree<T> &obj_tree){
+    post_order_stack_UN(obj_tree.root);
+}
+
+template<class T>
+void post_order_stack_UN(BTNode<T> *t){
+    BTNode<T> *st[100];
+    int top=-1;
+    BTNode<T> *q;
+    bool flag;
+    do
+    {
+        while(t!=nullptr)//把所有左节点压近栈里
+        {
+            top++;
+            st[top]=t;
+            t=t->lchild;
+        }
+        q=nullptr;
+        flag=true;
+        while(top!=-1 &&flag==true){
+            t=st[top];
+            if (t->rchild==q)
+            {
+                cout<<t->data;
+                top--;
+                q=t;
+
+            } else
+            {
+                t=t->rchild;
+                flag=false;
+            }
+        }
+    }while(top!=-1);
+}
+
+//template<class T>
+//void print_level(BTree<T> &obj_tree)
+//{
+//    BTNode<T> *p;
+//    BTNode<T> *qu[100];
+//    int front=0;
+//    int rear=0;
+//    rear++;
+//    qu[rear]=obj_tree.root;
+//    while(front!=rear)
+//    {
+//        cout<<qu[rear]->data;
+//        front
+//    }
+//}
+
+template<class T>
+void print_level(BTree<T> &obj_tree)
+{
+    queue<BTNode<T>*> qu;
+    BTNode<T> *p;
+    p=obj_tree.root;
+    qu.push(p);
+    if (p==nullptr)
+    {
+        return;
+    }
+    while(!qu.empty())
+    {
+        BTNode<T> *tmp=qu.front();
+        cout<<tmp->data;
+        qu.pop();
+        if (tmp->lchild!=nullptr)
+        {
+            qu.push(tmp->lchild);
+        }
+        if (tmp->rchild!=nullptr)
+        {
+            qu.push(tmp->rchild);
+        }
+    }
 }
