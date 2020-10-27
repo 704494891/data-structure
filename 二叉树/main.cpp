@@ -42,24 +42,25 @@ int main() {
 
 //非递归
     cout << endl;
-    cout << "先序遍历:";
+    cout << "非递归先序遍历:";
     pre_order_stack(test_tree);
 
     cout << endl;
-    cout << "中序遍历:";
+    cout << "非递归中序遍历:";
     in_order_stack(test_tree);
 
     cout << endl;
-    cout << "后序遍历:";
+    cout << "非递归后序遍历:";
     post_order_stack(test_tree);
 
     //层次遍历(用队列)
     cout <<endl ;
-    cout <<"层次遍历:";
+    cout <<"非递归层次遍历:";
     print_level(test_tree);
 
     //打印叶子节点
     cout <<endl;
+    cout <<"叶子:";
     test_tree.print_leaf_node(test_tree.root);
 
     return 0;

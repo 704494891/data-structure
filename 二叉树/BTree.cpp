@@ -7,6 +7,7 @@
 #include <iostream>
 #include "algorithm"
 #include <queue>
+#include <stack>
 
 using namespace std;
 const int maxsize = 1000;
@@ -219,29 +220,46 @@ void post_order(BTree<T> &obj_tree){
 //先序遍历(非递归:用栈)
 template<class T>
 void pre_order_stack(BTree<T> &obj_tree){
-    pre_order_UN(obj_tree.root);
+    pre_order_stack_UN(obj_tree.root);
 }
 
 template<class T>
 void pre_order_stack_UN(BTNode<T> *t){
-    BTNode<T> *st[100];
-    int top=-1;
+//    BTNode<T> *st[100];//这里注释掉的是没问题的,用数组模拟了栈
+//    int top=-1;
+//    BTNode<T> *p=t;
+//    while(p!=nullptr||top!=-1)
+//    {
+//        while(p!=nullptr)
+//        {
+//            cout<<p->data;//第一次碰到它
+//            top++;
+//            st[top]=p;
+//            p=p->lchild;
+//        }
+//        if (top!=-1)
+//        {
+//            p=st[top];
+//            top--;
+//            p=p->rchild;
+//        }
+        stack <BTNode<T> *> tmp;
+        BTNode<T>*p=t;
+        while (!tmp.empty()||p!=nullptr)
+        {
+            while(p!=nullptr)
+            {
+                cout<<p->data;
+                tmp.push(p);
+                p=p->lchild;
+            }
+            if (!tmp.empty())
+            {
+                p=tmp.top();
+                p=p->rchild;
+                tmp.pop();
+            }
 
-    while(top!=-1||t==nullptr);
-    {
-        while(t!=nullptr)
-        {
-            cout<<t->data;
-            top++;
-            st[top]=t;
-            t=t->lchild;
-        }
-        if (top!=-1)
-        {
-            t=st[top];
-            top--;
-            t=t->rchild;
-        }
     }
 }
 
@@ -268,7 +286,7 @@ void in_order_stack_UN(BTNode<T> *t){
         {
             t=st[top];
             top--;
-            cout<<t->data;
+            cout<<t->data;//第二次碰到它
             t=t->rchild;
 
         }
@@ -315,21 +333,7 @@ void post_order_stack_UN(BTNode<T> *t){
     }while(top!=-1);
 }
 
-//template<class T>
-//void print_level(BTree<T> &obj_tree)
-//{
-//    BTNode<T> *p;
-//    BTNode<T> *qu[100];
-//    int front=0;
-//    int rear=0;
-//    rear++;
-//    qu[rear]=obj_tree.root;
-//    while(front!=rear)
-//    {
-//        cout<<qu[rear]->data;
-//        front
-//    }
-//}
+
 
 template<class T>
 void print_level(BTree<T> &obj_tree)
